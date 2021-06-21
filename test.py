@@ -7,11 +7,12 @@ from models.m1.model import M1FaceAntiSpoofing
 from models.m2.model import M2FaceAntiSpoofing
 from models.m3.model import M3FaceAntiSpoofing
 from models.m4.model import M4FaceAntiSpoofing
+from models.m5.model import M5FaceAntiSpoofing
 
 import os
 
 face_detector = CVFaceDetector()
-spoof_detectors = [M1FaceAntiSpoofing(), M2FaceAntiSpoofing(), M3FaceAntiSpoofing(), M4FaceAntiSpoofing()]
+spoof_detectors = [M1FaceAntiSpoofing(), M2FaceAntiSpoofing(), M3FaceAntiSpoofing(), M4FaceAntiSpoofing(), M5FaceAntiSpoofing()]
 
 benchmark_dir = "benchmarks"
 for spoof_detector in spoof_detectors:
