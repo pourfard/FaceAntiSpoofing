@@ -22,5 +22,4 @@ Usage:
 
 
 TODO:
-1. Add https://github.com/minivision-ai/Silent-Face-Anti-Spoofing
-2. ?
+1. ?
