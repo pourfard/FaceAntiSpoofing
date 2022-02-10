@@ -7,6 +7,7 @@ There are five models to detect spoof.
 3. M3: https://github.com/Davidzhangyuanhan/CelebA-Spoof
 4. M4: https://github.com/JinghuiZhou/awesome_face_antispoofing
 5. M5: Simple CNN model. I have trained this model from scratch.
+6. M6: https://github.com/minivision-ai/Silent-Face-Anti-Spoofing
 
 Requirements:
 
