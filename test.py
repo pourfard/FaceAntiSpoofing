@@ -8,11 +8,13 @@ from models.m2.model import M2FaceAntiSpoofing
 from models.m3.model import M3FaceAntiSpoofing
 from models.m4.model import M4FaceAntiSpoofing
 from models.m5.model import M5FaceAntiSpoofing
+from models.m6.model import M6FaceAntiSpoofing
 
 import os
 
 face_detector = CVFaceDetector()
-spoof_detectors = [M1FaceAntiSpoofing(), M2FaceAntiSpoofing(), M3FaceAntiSpoofing(), M4FaceAntiSpoofing(), M5FaceAntiSpoofing()]
+spoof_detectors = [M1FaceAntiSpoofing(), M2FaceAntiSpoofing(), M3FaceAntiSpoofing(), M4FaceAntiSpoofing(),
+                   M5FaceAntiSpoofing(), M6FaceAntiSpoofing()]
 
 benchmark_dir = "benchmarks"
 for spoof_detector in spoof_detectors:
@@ -52,13 +54,13 @@ for spoof_detector in spoof_detectors:
                     errors.append(1 - real_score)
 
                 if is_correct:
-                    correct_count+=1
+                    correct_count += 1
 
-                all_count+=1
+                all_count += 1
                 print("Correct prediction: ", is_correct)
 
-    print("--- Average time for each face: ", total_time/all_count, " seconds")
+    print("--- Average time for each face: ", total_time / all_count, " seconds")
     print("--- Total count: ", all_count)
     print("--- Correct count: ", correct_count)
-    print("--- Average error: ", (sum(errors)/len(errors))*100,"%")
+    print("--- Average error: ", (sum(errors) / len(errors)) * 100, "%")
     print("End ----------------------------- ", type(spoof_detector))
