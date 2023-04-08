@@ -9,14 +9,13 @@ from models.m3.model import M3FaceAntiSpoofing
 from models.m4.model import M4FaceAntiSpoofing
 from models.m5.model import M5FaceAntiSpoofing
 from models.m6.model import M6FaceAntiSpoofing
-
+from models.m7.model import M7FaceAntiSpoofing
 import os
 
 face_detector = CVFaceDetector()
-spoof_detectors = [M1FaceAntiSpoofing(), M2FaceAntiSpoofing(), M3FaceAntiSpoofing(), M4FaceAntiSpoofing(),
-                   M5FaceAntiSpoofing(), M6FaceAntiSpoofing()]
-
+spoof_detectors = [M7FaceAntiSpoofing()]
 benchmark_dir = "benchmarks"
+is_face = False
 for spoof_detector in spoof_detectors:
     print("Start ----------------------------- ", type(spoof_detector))
     total_time = 0
@@ -30,11 +29,18 @@ for spoof_detector in spoof_detectors:
 
             bgr = cv2.imread(image_path)
 
-            face_bboxes = face_detector.get_face_bboxes(bgr)
+            if not is_face:
+                face_bboxes = face_detector.get_face_bboxes(bgr)
+            else:
+                face_bboxes = [[0, 0, bgr.shape[1], bgr.shape[0]]]
 
             for bbox in face_bboxes:
                 start_time = time.time()
+                crop = bgr[bbox[1]:bbox[3], bbox[0]:bbox[2], :]
+                # cv2.imshow("crop", crop)
+                # cv2.waitKey(1)
                 real_score = spoof_detector.get_real_score(bgr, bbox)
+
                 total_time += time.time() - start_time
                 print("Real score for image name " + image_name + " in class " + class_name + " is: ",
                       real_score)
@@ -62,5 +68,6 @@ for spoof_detector in spoof_detectors:
     print("--- Average time for each face: ", total_time / all_count, " seconds")
     print("--- Total count: ", all_count)
     print("--- Correct count: ", correct_count)
+    print("--- Accuracy: ", correct_count/all_count)
     print("--- Average error: ", (sum(errors) / len(errors)) * 100, "%")
     print("End ----------------------------- ", type(spoof_detector))
