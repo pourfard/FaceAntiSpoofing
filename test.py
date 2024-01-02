@@ -3,6 +3,7 @@ import time
 import cv2
 
 from detector.cv_face_detector.model import CVFaceDetector
+from detector.insight_detector.model import InsightDetector
 from models.m1.model import M1FaceAntiSpoofing
 from models.m2.model import M2FaceAntiSpoofing
 from models.m3.model import M3FaceAntiSpoofing
@@ -10,10 +11,11 @@ from models.m4.model import M4FaceAntiSpoofing
 from models.m5.model import M5FaceAntiSpoofing
 from models.m6.model import M6FaceAntiSpoofing
 from models.m7.model import M7FaceAntiSpoofing
+from models.m8.model import M8FaceAntiSpoofing
 import os
 
-face_detector = CVFaceDetector()
-spoof_detectors = [M7FaceAntiSpoofing()]
+face_detector = InsightDetector()
+spoof_detectors = [M8FaceAntiSpoofing()]
 benchmark_dir = "benchmarks"
 is_face = False
 for spoof_detector in spoof_detectors:
@@ -29,16 +31,23 @@ for spoof_detector in spoof_detectors:
 
             bgr = cv2.imread(image_path)
 
+            if bgr is None:
+                continue
             if not is_face:
                 face_bboxes = face_detector.get_face_bboxes(bgr)
             else:
                 face_bboxes = [[0, 0, bgr.shape[1], bgr.shape[0]]]
 
-            for bbox in face_bboxes:
+            if len(face_bboxes) == 0:
+                print("No face found " + image_name + " in class " + class_name)
+            for box in face_bboxes:
+                bbox = box["box"]
                 start_time = time.time()
                 crop = bgr[bbox[1]:bbox[3], bbox[0]:bbox[2], :]
-                # cv2.imshow("crop", crop)
-                # cv2.waitKey(1)
+                if "crop" in box:
+                    crop = box["crop"]
+                #cv2.imshow("crop", crop)
+                #cv2.waitKey(0)
                 real_score = spoof_detector.get_real_score(bgr, bbox)
 
                 total_time += time.time() - start_time

@@ -10,5 +10,5 @@ class CVFaceDetector(FaceDetectorInterface):
         faces = self.faceCascade.detectMultiScale(bgr, scaleFactor=1.1, minNeighbors=5, minSize=(75, 75))
         result = []
         for i, (x, y, w, h) in enumerate(faces):
-            result.append([x, y, x + w, y + h])
+            result.append({"box": [x, y, x + w, y + h]})
         return result

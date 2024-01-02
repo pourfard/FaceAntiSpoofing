@@ -9,7 +9,7 @@ There are six models to detect spoof.
 5. M5: Simple CNN model. I have trained this model from scratch.
 6. M6: https://github.com/minivision-ai/Silent-Face-Anti-Spoofing
 7. M7: https://github.com/Saiyam26/Face-Anti-Spoofing-using-DeePixBiS
-
+8. M8: Another CNN model trained in darknet. We have trained this model with a private dataset. This model tries to detect mobile or printed photo in the input image.
 Requirements:
 
 `python ==> 3.6`

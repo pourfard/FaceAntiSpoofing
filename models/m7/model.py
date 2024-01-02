@@ -31,7 +31,7 @@ class DeePixBiS(nn.Module):
 
 class M7FaceAntiSpoofing(FaceAntiSpoofingInterface):
     def __init__(self):
-        self.model = DeePixBiS()
+        self.model = DeePixBiS(False)
         self.model.load_state_dict(torch.load('models/m7/files/DeePixBiS.pth'))
         self.model.eval()
 
@@ -42,9 +42,9 @@ class M7FaceAntiSpoofing(FaceAntiSpoofingInterface):
             transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
         ])
 
-    def get_real_score(self, bgr, bbox):
+    def get_real_score(self, bgr, bbox, is_crop = False):
         x, y, x1, y1 = bbox
-        faceRegion = bgr[y:y1, x:x1]
+        faceRegion = bgr[y:y1, x:x1] if is_crop is False else bgr
         faceRegion = cv.cvtColor(faceRegion, cv.COLOR_BGR2RGB)
         faceRegion = self.tfms(faceRegion)
         faceRegion = faceRegion.unsqueeze(0)
