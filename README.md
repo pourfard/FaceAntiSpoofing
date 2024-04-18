@@ -1,6 +1,6 @@
 # FaceAntiSpoofing
-Multiple face anti-spoofing models from github.
-There are six models to detect spoof.
+Several face anti-spoofing models from github.
+There are eight models to detect spoofing.
 
 1. M1: https://github.com/zeusees/HyperFAS
 2. M2: https://github.com/emadeldeen24/face-anti-spoofing
