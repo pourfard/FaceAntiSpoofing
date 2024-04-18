@@ -1,4 +1,4 @@
-# FaceAntiSpoofing
+# Face Anti-Spoofing
 Several face anti-spoofing models from github.
 There are eight models to detect spoofing.
 
