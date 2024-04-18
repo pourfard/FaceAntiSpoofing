@@ -5,3 +5,4 @@ matplotlib==3.3.4
 torchvision==0.11.3
 dlib==19.23.0
 h5py==2.10.0
+insightface
