@@ -1,6 +1,6 @@
 # Face Anti-Spoofing
 Several face anti-spoofing models from github.
-There are eight models to detect spoofing.
+There are eight models to detect spoofing. For real-life projects combination of m6+m8 gives a high accuracy (more than 99%).
 
 1. M1: https://github.com/zeusees/HyperFAS
 2. M2: https://github.com/emadeldeen24/face-anti-spoofing
