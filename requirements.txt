@@ -6,3 +6,5 @@ torchvision==0.11.3
 dlib==19.23.0
 h5py==2.10.0
 insightface
+onnx==1.11.0
+onnxruntime-gpu==1.10.0

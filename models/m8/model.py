@@ -47,6 +47,47 @@ class VehicleClassifier_CV():
 
         return {'label':self.names[classId],'conf':float(confidence), "class_id": int(classId)}
 
+
+import onnxruntime
+
+def softmax(x):
+    return (np.exp(x) / np.exp(x).sum())
+
+class ONNX_CLASSIFIER_ONNXRUNTIME():
+
+    def __init__(self, weight, names, size, use_gpu=False):
+        self.names = names
+        onnx_path_demo = weight + ".onnx"
+        self.size = size
+        self.session = onnxruntime.InferenceSession(onnx_path_demo, providers=['CPUExecutionProvider'] if not use_gpu else ['CUDAExecutionProvider', 'CPUExecutionProvider'])
+        self.use_gpu = use_gpu
+
+    def classify(self, bgr):
+        bgr = get_fixed(bgr)
+
+        try:
+            blob = cv2.dnn.blobFromImage(bgr, 1 / 255.0, self.size, swapRB=True, crop=False)
+        except Exception as e:
+            print(e)
+            return []
+
+        input_name = self.session.get_inputs()[0].name
+        output_name = self.session.get_outputs()[0].name
+
+        input_data = blob.astype(np.float32)
+
+        outputs = self.session.run([output_name], {input_name: input_data})
+
+        out = outputs[0]
+
+        out = softmax(out)
+
+        out = out.flatten()
+        classId = np.argmax(out)
+        confidence = out[classId]
+
+        return {'label': self.names[classId], 'conf': float(confidence), "class_id": int(classId)}
+
 def get_fixed(img):
     if img.shape[0] > img.shape[1]:
         new_img = np.zeros((img.shape[0], img.shape[0], 3), dtype="uint8")
@@ -60,9 +101,12 @@ def get_fixed(img):
         new_img = img
 
     return new_img
-def get_classifier(model_dir, size):
+
+def get_classifier(model_dir, size, load_onnx):
     CFC = model_dir + "/c"
     CFN = model_dir + "/n"
+    if load_onnx:
+        CFN += ".onnx.txt"
     CFW = model_dir + "/w"
 
     with open(CFN) as file:
@@ -71,8 +115,10 @@ def get_classifier(model_dir, size):
 
     modelConfiguration = CFC
     modelWeights = CFW
-
-    return VehicleClassifier_CV(modelConfiguration, modelWeights, names, size)
+    if load_onnx:
+        return ONNX_CLASSIFIER_ONNXRUNTIME(modelWeights, names, size)
+    else:
+        return VehicleClassifier_CV(modelConfiguration, modelWeights, names, size)
 
 def get_bbox_with_margin(box, margin_w_left, margin_w_right, margin_h, bgr):
     crop_width = int(box[2] - box[0])
@@ -98,8 +144,8 @@ def get_bbox_with_margin(box, margin_w_left, margin_w_right, margin_h, bgr):
     return [crop_x, crop_y, crop_x + crop_width, crop_y + crop_height]
 
 class M8FaceAntiSpoofing(FaceAntiSpoofingInterface):
-    def __init__(self):
-        self.model = get_classifier("models/m8/files/model", (256, 256))
+    def __init__(self, load_onnx = False):
+        self.model = get_classifier("models/m8/files/model", (256, 256), load_onnx)
 
     def get_real_score(self, bgr, bbox, is_crop = False):
         bbox = get_bbox_with_margin(bbox, 1.5,1.5,1.5, bgr)
