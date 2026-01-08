@@ -2,16 +2,15 @@ import time
 
 import cv2
 
-from detector.cv_face_detector.model import CVFaceDetector
 from detector.insight_detector.model import InsightDetector
-
 from models.m6.model import M6FaceAntiSpoofing
-
 from models.m8.model import M8FaceAntiSpoofing
+from models.m9.model import M9FaceAntiSpoofing
+
 import os
 
 face_detector = InsightDetector()
-spoof_detectors = [M8FaceAntiSpoofing(), M8FaceAntiSpoofing(load_onnx=True), M6FaceAntiSpoofing()]
+spoof_detectors = [M6FaceAntiSpoofing(), M8FaceAntiSpoofing(),M9FaceAntiSpoofing()]
 benchmark_dir = "benchmarks"
 is_face = False
 for spoof_detector in spoof_detectors:
